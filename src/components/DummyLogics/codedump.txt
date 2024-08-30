@@ -1,0 +1,444 @@
+if (currentRef) {
+      console.log("locations to be added", {
+        last: locationsList.new,
+        new: currentRef,
+      });
+      // {
+      //   x: currentRef.left,
+      //   y: (currentRef.top + currentRef.bottom - currentRef.height) / 2,
+      // }
+      if (!locationsList?.new?.left && currentRef) {
+        console.log("locationsList?.new?.left", locationsList);
+        setNodes((pre) => {
+          return [
+            // ...pre.slice(0, -1),
+            {
+              id: "addButton",
+              type: "AddButtonNodeSVG",
+              data: { label: "AddButtonNodeSVG" },
+              position: {
+                x: currentRef.left,
+                y: (currentRef.top + currentRef.bottom - currentRef.height) / 2,
+              },
+            },
+          ];
+        });
+        setAddingNodesLocations({
+          x: locationsList.new.left,
+          y:
+            (locationsList.new.top +
+              locationsList.new.bottom -
+              currentRef.height) /
+            2,
+        });
+      } else {
+      }
+      setLocationsList((pre) => ({
+        last: pre.new,
+        new: currentRef,
+      }));
+      // setLocationsList((pre) => ({
+      //   last: pre.new,
+      //   new: {
+      //     x: currentRef.left,
+      //     y: (currentRef.top + currentRef.bottom) / 2,
+      //   },
+      // }));
+      // setAddingNodesLocations({
+      //   x: currentRef.left,
+      //   y: (currentRef.top + currentRef.bottom) / 2,
+      // });
+      // setNodes((pre) => [
+      //   ...pre.slice(0, -1),
+      //   {
+      //     id: "addButton",
+      //     type: "AddButtonNodeSVG",
+      //     data: { label: "AddButtonNodeSVG" },
+      //     position: {
+      //       x: currentRef.left,
+      //       y: (currentRef.top + currentRef.bottom) / 2,
+      //     },
+      //   },
+      // ]);
+    }
+
+addButton svg
+// {
+//   id: "addButton",
+//   type: "AddButtonNodeSVG",
+//   data: { label: "AddButtonNodeSVG" },
+//   position: { x: 661, y: 48 },
+// },
+
+// inside useEffect of currentRef
+else {
+        // setNodes((pre) => {
+        //   return [
+        //     ...pre,
+        //     {
+        //       id: "addButton",
+        //       type: "AddButtonNodeSVG",
+        //       data: { label: "AddButtonNodeSVG" },
+        //       position: {
+        //         x: locationsList.new.left,
+        //         y:
+        //           (locationsList.new.top +
+        //             locationsList.new.bottom -
+        //             currentRef.height) /
+        //           2,
+        //       },
+        //     },
+        //   ];
+        // });
+      }
+
+
+last stable commented version:
+
+import React, { useState, useEffect, useMemo } from "react";
+import ReactFlow, {
+  Background,
+  Controls,
+  MiniMap,
+  useEdgesState,
+  useNodesState,
+} from "reactflow";
+import CustomCombinedNodeSVG from "./components/Nodes/CustomCombinedNodeSVG";
+import AddButtonNodeSVG from "./components/Nodes/AddButtonNodeSVG";
+import CustomGaugeNode from "./components/Nodes/CustomGaugeNode";
+import CustomPipe from "./components/Nodes/CustomPipe";
+import CustomDatabase from "./components/Nodes/CustomDatabase";
+import {
+  AddCustomSVGFunction,
+  useAddCustomSVG,
+} from "./components/CustomHookToAddSVG";
+
+const Implementation = () => {
+  const [addingItems, setAddingItems] = useState([]);
+  const initialNodes = [
+    {
+      id: "allSVG",
+      type: "CustomCombinedNodeSVG",
+      data: { label: "allSVG" },
+      position: { x: 0, y: 0 },
+    },
+  ];
+  const initialEdges = [];
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+  // const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  // const [addingNodesLocations, setAddingNodesLocations] = useState();
+  const [currentRef, setCurrentRef] = useState(null);
+  const [locationsList, setLocationsList] = useState({
+    last: null,
+    new: null,
+  });
+
+  const nodeTypes = useMemo(
+    () => ({
+      CustomCombinedNodeSVG: (props) => (
+        <CustomCombinedNodeSVG {...props} setCurrentRef={setCurrentRef} />
+      ),
+      AddButtonNodeSVG: (props) => (
+        <AddButtonNodeSVG
+          {...props}
+          setAddingItems={setAddingItems}
+          // setCurrentRef={setCurrentRef}
+        />
+      ),
+      CustomGaugeNode,
+      CustomPipe,
+      CustomDatabase,
+    }),
+    []
+  );
+
+  useEffect(() => {
+    if (addingItems) {
+      //call a function that adds another pipe, gauge or database to the pipeline
+      const { length } = AddCustomSVGFunction(
+        addingItems,
+        locationsList,
+        currentRef,
+        setNodes
+      );
+    }
+  }, [addingItems]);
+
+  // useEffect(() => {
+  //   // console.log("currentref changed", currentRef, locationsList);
+  //   if (
+  //     currentRef &&
+  //     currentRef.width &&
+  //     currentRef.height &&
+  //     !locationsList.last &&
+  //     nodes.length <= 2
+  //   ) {
+  //     // console.log("currentref changed", currentRef, locationsList);
+  //     setLocationsList((pre) => ({
+  //       last: pre.new,
+  //       new: currentRef,
+  //     }));
+  //     const nodeVals = nodes[nodes.length - 1];
+  //     if (!locationsList.new && nodeVals.id !== "addButton") {
+  //       setNodes((pre) => {
+  //         return [
+  //           ...pre,
+  //           {
+  //             id: "addButton",
+  //             type: "AddButtonNodeSVG",
+  //             data: { label: "AddButtonNodeSVG" },
+  //             position: {
+  //               x: currentRef.right,
+  //               y: (currentRef.top + currentRef.bottom - 48) / 2,
+  //             },
+  //           },
+  //         ];
+  //       });
+  //     }
+  //   }
+  // }, [currentRef]);
+
+  return (
+    <ReactFlow
+      //nodes={nodes}
+      nodes={nodes}
+      edges={initialEdges}
+      nodeTypes={nodeTypes}
+      // fitView
+      onNodesChange={(changes) => {
+        const nodeVals = changes[changes.length - 1];
+        console.log("changes", nodeVals, locationsList, currentRef);
+        if (changes.length === 1) {
+          setNodes((pre) => {
+            return [
+              ...pre,
+              {
+                id: "addButton",
+                type: "AddButtonNodeSVG",
+                data: { label: "AddButtonNodeSVG" },
+                position: {
+                  x: currentRef.right + nodeVals.dimensions.width,
+                  y:
+                    ((currentRef.top + currentRef.bottom) / 2 -
+                      nodeVals.dimensions.height / 2 +
+                      (currentRef.top + currentRef.bottom) / 2 +
+                      nodeVals.dimensions.height / 2 -
+                      48) /
+                    2,
+                },
+              },
+            ];
+          });
+        }
+        if (
+          // changes.length >= 2 &&
+          nodeVals?.dimensions &&
+          nodeVals.id !== "addButton"
+        ) {
+          console.log("hehehee");
+          setNodes((pre) => {
+            return [
+              ...pre,
+              {
+                id: "addButton",
+                type: "AddButtonNodeSVG",
+                data: { label: "AddButtonNodeSVG" },
+                position: {
+                  x: currentRef.right + nodeVals.dimensions.width,
+                  y:
+                    ((currentRef.top + currentRef.bottom) / 2 -
+                      nodeVals.dimensions.height / 2 +
+                      (currentRef.top + currentRef.bottom) / 2 +
+                      nodeVals.dimensions.height / 2 -
+                      48) /
+                    2,
+                },
+              },
+            ];
+          });
+          const refObj = {
+            ...nodeVals.dimensions,
+            left: locationsList.right,
+            right: locationsList.right + nodeVals.dimensions.width,
+            top:
+              (currentRef.top + currentRef.bottom) / 2 -
+              nodeVals.dimensions.height / 2,
+            bottom:
+              (currentRef.top + currentRef.bottom) / 2 +
+              nodeVals.dimensions.height / 2,
+            x: locationsList.right,
+            y:
+              (currentRef.top + currentRef.bottom) / 2 -
+              nodeVals.dimensions.height / 2,
+          };
+          setLocationsList((pre) => ({
+            last: pre.new,
+            new: refObj,
+          }));
+          setCurrentRef(refObj);
+        }
+      }}
+    >
+      <Controls />
+      <MiniMap />
+      <Background variant="dots" gap={12} size={1} />
+    </ReactFlow>
+  );
+};
+
+export default Implementation;
+
+
+
+        // if(nodeVals )
+        // if (changes.length === 1) {
+        //   console.log("inside");
+        //   setNodes((pre) => {
+        //     return [
+        //       ...pre,
+        //       {
+        //         id: "addButton",
+        //         type: "AddButtonNodeSVG",
+        //         data: { label: "AddButtonNodeSVG" },
+        //         position: {
+        //           x: nodeVals.dimensions.width,
+        //           y: (nodeVals.dimensions.height - 48) / 2,
+        //         },
+        //       },
+        //     ];
+        //   });
+        // } else
+        // if (nodeVals?.dimensions && nodeVals.id !== "addButton") {
+        //   console.log("hehehee");
+        //   setNodes((pre) => {
+        //     return [
+        //       ...pre,
+        //       {
+        //         id: "addButton",
+        //         type: "AddButtonNodeSVG",
+        //         data: { label: "AddButtonNodeSVG" },
+        //         position: {
+        //           x: currentRef.right + nodeVals.dimensions.width,
+        //           y:
+        //             ((currentRef.top + currentRef.bottom) / 2 -
+        //               nodeVals.dimensions.height / 2 +
+        //               (currentRef.top + currentRef.bottom) / 2 +
+        //               nodeVals.dimensions.height / 2 -
+        //               48) /
+        //             2,
+        //         },
+        //       },
+        //     ];
+        //   });
+        //   const refObj = {
+        //     ...nodeVals.dimensions,
+        //     left: locationsList.right,
+        //     right: locationsList.right + nodeVals.dimensions.width,
+        //     top:
+        //       (currentRef.top + currentRef.bottom) / 2 -
+        //       nodeVals.dimensions.height / 2,
+        //     bottom:
+        //       (currentRef.top + currentRef.bottom) / 2 +
+        //       nodeVals.dimensions.height / 2,
+        //     x: locationsList.right,
+        //     y:
+        //       (currentRef.top + currentRef.bottom) / 2 -
+        //       nodeVals.dimensions.height / 2,
+        //   };
+        //   setLocationsList((pre) => ({
+        //     last: pre.new,
+        //     new: refObj,
+        //   }));
+        //   setCurrentRef(refObj);
+        // }
+
+add svg icon code
+
+<img
+  src={addButton}
+  alt="add button"
+  onClick={(e) => {
+    // console.log("current clicking location", e.clientX, e.clientY);
+    // setAddingNodesLocations({ x: e.clientX, y: e.clientY });
+    // setAddingNodesLocations({ x: 661, y: (134 - 58) / 2 });
+    // setAddingNodesLocations({ x: e.screenX, y: e.screenY });
+    setRenderButton(false);
+  }}
+/>
+
+import { useCallback } from "react";
+import { Handle, Position } from "reactflow";
+import gauge from "../../../images/gauge.svg";
+
+function CustomGaugeNode({ data, isConnectable, setCurrentRef }) {
+  console.log("CustomGaugeNode");
+  const onChange = useCallback((evt) => {
+    console.log(evt.target.value);
+  }, []);
+
+  return (
+    <div
+      ref={(e) => {
+        // e && setCurrentRef(e.getBoundingClientRect());
+      }}
+    >
+      <img src={gauge} alt="pipe" />
+      <Handle
+        type="target"
+        position={Position.Bottom}
+        id="c"
+        isConnectable={isConnectable}
+        // style={{ bottom: 12 }}
+      />
+    </div>
+  );
+}
+
+export default CustomGaugeNode;
+
+import { useCallback } from "react";
+import { Handle, Position } from "reactflow";
+import database from "../../../images/dataBase.svg";
+
+function CustomDatabase({ data, isConnectable, setCurrentRef }) {
+  console.log("CustomDatabase");
+  const onChange = useCallback((evt) => {
+    console.log(evt.target.value);
+  }, []);
+
+  return (
+    <div
+      ref={(e) => {
+        // e && setCurrentRef(e.getBoundingClientRect());
+      }}
+    >
+      <img src={database} alt="pipe" />
+      <Handle
+        type="source"
+        position={Position.Top}
+        id="a"
+        isConnectable={isConnectable}
+      />
+      <Handle
+        type="source"
+        position={Position.Right}
+        id="b"
+        isConnectable={isConnectable}
+      />
+      <Handle
+        type="source"
+        position={Position.Bottom}
+        id="c"
+        isConnectable={isConnectable}
+      />
+      <Handle
+        type="source"
+        position={Position.Left}
+        id="c"
+        isConnectable={isConnectable}
+      />
+    </div>
+  );
+}
+
+export default CustomDatabase;

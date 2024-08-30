@@ -1,134 +1,91 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import styled from "styled-components";
 import ReactFlow, {
+  MiniMap,
+  Controls,
+  Background,
   useNodesState,
   useEdgesState,
   addEdge,
-  // MiniMap,
-  Controls,
-  Background,
-  // Node,
-  // Edge,
-  Position,
-  ConnectionMode,
-  MarkerType,
+  // Position,
 } from "reactflow";
+
 import "reactflow/dist/style.css";
 
-import ButtonEdge from "./components/ReactFlow/ButtonEdge";
-import SelfConnectingEdge from "./components/ReactFlow/SelfConnectingEdge";
-import BiDirectionalEdge from "./components/ReactFlow/BiDirectionalEdge";
-import BiDirectionalNode from "./components/ReactFlow/BidirectionalNode";
+import { initialNodes, initialEdges } from "./components/ReactFlow/nodes-edges";
+import DagreComponent from "./components/ReactFlow/DagreComponent";
+import CustomVectorLinesNode from "./components/ReactFlow/CustomVectorLinesNode";
+import CustomCloudNode from "./components/ReactFlow/CustomCloudNode";
+import CustomGeneralNodeLeftTarget from "./components/ReactFlow/CustomGeneralNode";
+import CustomCombinedNodeSVG from "./components/ReactFlow/CustomCombinedNodeSVG.jsx";
+import ComponentELK from "./components/ReactFlow/ElkComponent";
+import Panel from "./components/Panel";
+import Implementation from "./components/Implementation/index.js";
 
-const initialNodes = [
-  {
-    id: "button-1",
-    type: "input",
-    data: { label: "Button Edge 1" },
-    position: { x: 125, y: 0 },
-  },
-  {
-    id: "button-2",
-    data: { label: "Button Edge 2" },
-    position: { x: 125, y: 200 },
-  },
-  {
-    id: "bi-1",
-    data: { label: "Bi Directional 1" },
-    position: { x: 0, y: 300 },
-    type: "bidirectional",
-    sourcePosition: Position.Right,
-    targetPosition: Position.Left,
-  },
-  {
-    id: "bi-2",
-    data: { label: "Bi Directional 2" },
-    position: { x: 250, y: 300 },
-    type: "bidirectional",
-    sourcePosition: Position.Right,
-    targetPosition: Position.Left,
-  },
-  {
-    id: "self-1",
-    data: { label: "Self Connecting" },
-    position: { x: 125, y: 500 },
-    sourcePosition: Position.Right,
-    targetPosition: Position.Left,
-  },
-];
-
-const initialEdges = [
-  {
-    id: "edge-button",
-    source: "button-1",
-    target: "button-2",
-    type: "buttonedge",
-  },
-  {
-    id: "edge-bi-1",
-    source: "bi-1",
-    target: "bi-2",
-    type: "bidirectional",
-    sourceHandle: "right",
-    targetHandle: "left",
-    markerEnd: { type: MarkerType.ArrowClosed },
-  },
-  {
-    id: "edge-bi-2",
-    source: "bi-2",
-    target: "bi-1",
-    type: "bidirectional",
-    sourceHandle: "left",
-    targetHandle: "right",
-    markerEnd: { type: MarkerType.ArrowClosed },
-  },
-  {
-    id: "edge-self",
-    source: "self-1",
-    target: "self-1",
-    type: "selfconnecting",
-    markerEnd: { type: MarkerType.Arrow },
-  },
-];
-
-const edgeTypes = {
-  bidirectional: BiDirectionalEdge,
-  selfconnecting: SelfConnectingEdge,
-  buttonedge: ButtonEdge,
-};
+// width: 150, height: 36 , every node is at a distance of 50px, so x is last x+50 so 200 added
 
 const nodeTypes = {
-  bidirectional: BiDirectionalNode,
+  customVectorLinesNode: CustomVectorLinesNode,
+  customCloudNode: CustomCloudNode,
+  customGeneralNodeLeftTarget: CustomGeneralNodeLeftTarget,
+  customCombinedNodeSVG: CustomCombinedNodeSVG,
 };
-
-const EdgesFlow = () => {
-  const [nodes, , onNodesChange] = useNodesState(initialNodes);
+const updatedInitialNodes = initialNodes.map((item, index) => {
+  // console.log("item", item);
+  return {
+    ...item,
+    position: { x: initialNodes.at(index - 1).position.x + 200, y: 335 },
+  };
+});
+export default function App() {
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  const [renderComp, setRenderComp] = useState("implementation");
+  const [currentNode, setCurrentNode] = useState(4);
 
   const onConnect = useCallback(
     (params) => setEdges((eds) => addEdge(params, eds)),
-    []
+    [setEdges]
   );
 
-  return (
-    <div style={{ width: "100vw", height: "100vh" }}>
+  const componentObjects = {
+    custom: (
       <ReactFlow
-        nodes={nodes}
+        // nodes={nodes}
+        nodes={updatedInitialNodes}
         edges={edges}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
-        snapToGrid={true}
-        edgeTypes={edgeTypes}
         nodeTypes={nodeTypes}
         fitView
-        attributionPosition="top-right"
-        connectionMode={ConnectionMode.Loose}
       >
         <Controls />
-        <Background />
+        <MiniMap />
+        <Background variant="dots" gap={12} size={1} />
       </ReactFlow>
-    </div>
-  );
-};
+    ),
+    dagre: <DagreComponent />,
+    elk: <ComponentELK />,
+    implementation: <Implementation />,
+  };
 
-export default EdgesFlow;
+  return (
+    <ReactFlowContainer>{componentObjects[renderComp]}</ReactFlowContainer>
+  );
+}
+
+const Container = styled.div`
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 2px solid black;
+`;
+
+const ReactFlowContainer = styled.div`
+  width: 100vw;
+  height: 100vh;
+  align-items: center;
+`;
