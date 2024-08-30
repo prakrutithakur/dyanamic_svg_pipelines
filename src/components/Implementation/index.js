@@ -54,7 +54,7 @@ const Implementation = () => {
       nodes={nodes}
       edges={initialEdges}
       nodeTypes={nodeTypes}
-      fitView
+      // fitView
       onNodesChange={(changes) => {
         const node_index = parseInt(changes[0].id);
         if (
