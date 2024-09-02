@@ -1,8 +1,7 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback } from "react";
 import combined from "../../../images/combinedRawData.svg";
 
 function CustomCombinedNodeSVG({ data, isConnectable, setCurrentRef }) {
-  console.log("CustomCombinedNodeSVG");
   const onChange = useCallback((evt) => {
     console.log(evt.target.value);
   }, []);

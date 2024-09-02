@@ -71,3 +71,21 @@ export const nodePosition = (location, currentRef, height, width) => {
   }
   return { x: 0, y: 0 };
 };
+
+export const calculateRef = (nodes, changes, node_index, change_index) => {
+  const calculatedRef = {
+    top: nodes[node_index]?.position?.y,
+    bottom:
+      nodes[node_index]?.position?.y +
+      changes[change_index]?.dimensions?.height,
+    left: nodes[node_index]?.position?.x,
+    right:
+      nodes[node_index]?.position?.x + changes[change_index]?.dimensions?.width,
+    x: nodes[node_index]?.position?.x,
+    y: nodes[node_index]?.position?.y,
+    height: changes[change_index]?.dimensions?.height,
+    width: changes[change_index]?.dimensions?.width,
+  };
+  console.log("calculatedRef", calculatedRef);
+  return calculatedRef;
+};

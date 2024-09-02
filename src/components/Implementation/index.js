@@ -13,6 +13,7 @@ import CustomPipe from "./components/Nodes/CustomPipe";
 import CustomDatabase from "./components/Nodes/CustomDatabase";
 // import { AddCustomSVGFunction } from "./components/CustomHookToAddSVG";
 import { addIconsInsertion } from "./components/addIconsinsertion";
+import { calculateRef } from "./components/CustomHookToAddSVG";
 
 const Implementation = () => {
   const initialNodes = [
@@ -24,8 +25,9 @@ const Implementation = () => {
     },
   ];
   const initialEdges = [];
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+  const [nodes, setNodes] = useNodesState(initialNodes);
   const [currentRef, setCurrentRef] = useState(null);
+  const [filter, setFilter] = useState();
 
   const nodeTypes = useMemo(
     () => ({
@@ -33,7 +35,11 @@ const Implementation = () => {
         <CustomCombinedNodeSVG {...props} setCurrentRef={setCurrentRef} />
       ),
       AddButtonNodeSVG: (props) => (
-        <AddButtonNodeSVG {...props} setNodes={setNodes} />
+        <AddButtonNodeSVG
+          {...props}
+          setNodes={setNodes}
+          setFilter={setFilter}
+        />
       ),
       CustomGaugeNode,
       CustomPipe,
@@ -44,7 +50,8 @@ const Implementation = () => {
 
   useEffect(() => {
     if (currentRef && currentRef.width && nodes.length === 1) {
-      const add = addIconsInsertion(currentRef, nodes.length);
+      // to add three plus icon nodes initially on the combinedSVG node
+      const add = addIconsInsertion(currentRef, nodes.length, filter);
       setNodes((pre) => [...pre, ...add]);
     }
   }, [currentRef]);
@@ -61,45 +68,41 @@ const Implementation = () => {
           nodes.length >= 4 && //change to 5 if added node on left as well
           changes.length === 1 &&
           node_index !== 0 &&
-          nodes[node_index].type !== "AddButtonNodeSVG" &&
+          nodes[node_index]?.type !== "AddButtonNodeSVG" &&
           changes?.[0]?.type === "dimensions" &&
           changes?.[0]?.dimensions?.height
         ) {
-          const calculatedRef = {
-            top: nodes[node_index].position.y,
-            bottom: nodes[node_index].position.y + changes[0].dimensions.height,
-            left: nodes[node_index].position.x,
-            right: nodes[node_index].position.x + changes[0].dimensions.width,
-            x: nodes[node_index].position.x,
-            y: nodes[node_index].position.y,
-            height: changes[0].dimensions.height,
-            width: changes[0].dimensions.width,
-          };
-          const add = addIconsInsertion(calculatedRef, nodes.length);
+          const nodeRef = calculateRef(nodes, changes, node_index, 0);
+          const add = addIconsInsertion(nodeRef, nodes.length, filter);
           setNodes((pre) => [...pre, ...add]);
         } else if (nodes.length === changes.length && nodes.length >= 4) {
           const node_index_last = parseInt(changes[nodes.length - 1].id);
           if (
-            nodes[node_index_last].type !== "AddButtonNodeSVG" &&
+            nodes[node_index_last]?.type !== "AddButtonNodeSVG" &&
             changes[changes.length - 1]?.type === "dimensions" &&
             changes[changes.length - 1]?.dimensions?.height
           ) {
-            const calculatedRef = {
-              top: nodes[node_index_last].position.y,
-              bottom:
-                nodes[node_index_last].position.y +
-                changes[changes.length - 1].dimensions.height,
-              left: nodes[node_index_last].position.x,
-              right:
-                nodes[node_index_last].position.x +
-                changes[changes.length - 1].dimensions.width,
-              x: nodes[node_index_last].position.x,
-              y: nodes[node_index_last].position.y,
-              height: changes[changes.length - 1].dimensions.height,
-              width: changes[changes.length - 1].dimensions.width,
-            };
-            const add = addIconsInsertion(calculatedRef, nodes.length);
+            const nodeRef = calculateRef(
+              nodes,
+              changes,
+              node_index_last,
+              changes.length - 1
+            );
+            console.log(
+              "types",
+              Object.values(nodeRef).includes(undefined),
+              Object.values(nodeRef).includes(NaN)
+            );
+
+            // if (
+            //   !(
+            //     Object.values(nodeRef).includes(undefined) ||
+            //     Object.values(nodeRef).includes(NaN)
+            //   )
+            // ) {
+            const add = addIconsInsertion(nodeRef, nodes.length, filter);
             setNodes((pre) => [...pre, ...add]);
+            // }
           }
         }
       }}

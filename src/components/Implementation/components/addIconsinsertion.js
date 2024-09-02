@@ -1,4 +1,4 @@
-export const addIconsInsertion = (currentRef, index) => {
+export const addIconsInsertion = (currentRef, index, filter) => {
   const arr = [
     {
       id: `${index}`,
@@ -57,6 +57,19 @@ export const addIconsInsertion = (currentRef, index) => {
     //   },
     // },
   ];
-
   return arr;
+  // .filter((item) => item.data.location !== filter);
+};
+
+export const filterFunction = (location) => {
+  switch (location) {
+    case "top":
+      return "bottom";
+    case "left":
+      return "right";
+    case "bottom":
+      return "top";
+    default:
+      return "left";
+  }
 };
