@@ -12,17 +12,17 @@ import CustomGaugeNode from "./components/Nodes/CustomGaugeNode";
 import CustomPipe from "./components/Nodes/CustomPipe";
 import CustomDatabase from "./components/Nodes/CustomDatabase";
 import CustomcurvedPipe from "./components/Nodes/CustomcurvedPipe";
-// import { AddCustomSVGFunction } from "./components/CustomHookToAddSVG";
+import CustomDataExp from "./components/Nodes/CustomDataExp";
 import { addIconsInsertion } from "./components/addIconsinsertion";
 import { calculateRef } from "./components/CustomHookToAddSVG";
-import CustomDataExp from "./components/Nodes/CustomDataExp";
+// import { shiftNodes } from "./components/shiftNodes";
 
 const Implementation = () => {
   const initialNodes = [
     {
       id: "0",
       type: "CustomCombinedNodeSVG",
-      data: { label: "allSVG" },
+      data: { label: "allSVG", dimensions: { width: 661, height: 130 } },
       position: { x: 100, y: 250 },
     },
   ];
@@ -30,6 +30,7 @@ const Implementation = () => {
   const [nodes, setNodes] = useNodesState(initialNodes);
   const [currentRef, setCurrentRef] = useState(null);
   const [filter, setFilter] = useState();
+  const [bottomReachedDetails, setBottomReachedDetails] = useState();
 
   const nodeTypes = useMemo(
     () => ({
@@ -99,6 +100,7 @@ const Implementation = () => {
             setNodes((pre) => [...pre, ...add]);
           }
         }
+        // shiftNodes(nodes);
       }}
     >
       <Controls />

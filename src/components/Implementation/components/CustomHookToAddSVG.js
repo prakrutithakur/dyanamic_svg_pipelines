@@ -51,7 +51,7 @@ export const AddCustomSVGFunction = (itemsToAdd, data, setNodes) => {
           label: "CustomcurvedPipe",
           dimensions: { width: 206, height: 175 },
         },
-        position: nodePosition(data.location, data.currentRef, 107, 128),
+        position: nodePosition(data.location, data.currentRef, 175, 206),
       };
       return temp;
     });
@@ -66,7 +66,7 @@ export const AddCustomSVGFunction = (itemsToAdd, data, setNodes) => {
           label: "CustomDataExp",
           dimensions: { width: 268, height: 157 },
         },
-        position: nodePosition(data.location, data.currentRef, 107, 128),
+        position: nodePosition(data.location, data.currentRef, 157, 268),
       };
       return temp;
     });
@@ -116,6 +116,5 @@ export const calculateRef = (nodes, changes, node_index, change_index) => {
     height: changes[change_index]?.dimensions?.height,
     width: changes[change_index]?.dimensions?.width,
   };
-  console.log("calculatedRef", calculatedRef);
   return calculatedRef;
 };
