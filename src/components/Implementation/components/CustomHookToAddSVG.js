@@ -41,6 +41,36 @@ export const AddCustomSVGFunction = (itemsToAdd, data, setNodes) => {
       return temp;
     });
   }
+  if (itemsToAdd.includes("protocol")) {
+    setNodes((pre) => {
+      const temp = [...pre];
+      temp[data.id] = {
+        id: data.id,
+        type: "CustomcurvedPipe",
+        data: {
+          label: "CustomcurvedPipe",
+          dimensions: { width: 206, height: 175 },
+        },
+        position: nodePosition(data.location, data.currentRef, 107, 128),
+      };
+      return temp;
+    });
+  }
+  if (itemsToAdd.includes("data")) {
+    setNodes((pre) => {
+      const temp = [...pre];
+      temp[data.id] = {
+        id: data.id,
+        type: "CustomDataExp",
+        data: {
+          label: "CustomDataExp",
+          dimensions: { width: 268, height: 157 },
+        },
+        position: nodePosition(data.location, data.currentRef, 107, 128),
+      };
+      return temp;
+    });
+  }
   return { length: itemsToAdd.length };
 };
 

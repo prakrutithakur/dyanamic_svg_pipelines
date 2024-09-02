@@ -1,7 +1,7 @@
 export const addIconsInsertion = (currentRef, index, filter) => {
   const arr = [
     {
-      id: `${index}`,
+      // id: `${index}`,
       type: "AddButtonNodeSVG",
       data: {
         label: "added_on_top",
@@ -15,7 +15,7 @@ export const addIconsInsertion = (currentRef, index, filter) => {
       },
     },
     {
-      id: `${index + 1}`,
+      // id: `${index + 1}`,
       type: "AddButtonNodeSVG",
       data: {
         label: "added_on_right",
@@ -29,7 +29,7 @@ export const addIconsInsertion = (currentRef, index, filter) => {
       },
     },
     {
-      id: `${index + 2}`,
+      // id: `${index + 2}`,
       type: "AddButtonNodeSVG",
       data: {
         label: "added_on_bottom",
@@ -57,8 +57,9 @@ export const addIconsInsertion = (currentRef, index, filter) => {
     //   },
     // },
   ];
-  return arr;
-  // .filter((item) => item.data.location !== filter);
+  return arr
+    .filter((item) => item.data.location !== filter)
+    .map((newItem, i) => ({ ...newItem, id: `${index + i}` }));
 };
 
 export const filterFunction = (location) => {

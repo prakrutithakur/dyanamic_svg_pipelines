@@ -11,9 +11,11 @@ import AddButtonNodeSVG from "./components/Nodes/AddButtonNodeSVG";
 import CustomGaugeNode from "./components/Nodes/CustomGaugeNode";
 import CustomPipe from "./components/Nodes/CustomPipe";
 import CustomDatabase from "./components/Nodes/CustomDatabase";
+import CustomcurvedPipe from "./components/Nodes/CustomcurvedPipe";
 // import { AddCustomSVGFunction } from "./components/CustomHookToAddSVG";
 import { addIconsInsertion } from "./components/addIconsinsertion";
 import { calculateRef } from "./components/CustomHookToAddSVG";
+import CustomDataExp from "./components/Nodes/CustomDataExp";
 
 const Implementation = () => {
   const initialNodes = [
@@ -44,6 +46,8 @@ const Implementation = () => {
       CustomGaugeNode,
       CustomPipe,
       CustomDatabase,
+      CustomcurvedPipe,
+      CustomDataExp,
     }),
     []
   );
@@ -61,7 +65,9 @@ const Implementation = () => {
       nodes={nodes}
       edges={initialEdges}
       nodeTypes={nodeTypes}
-      // fitView
+      // fitView={(e) => {
+      //   console.log("fitview", e);
+      // }}
       onNodesChange={(changes) => {
         const node_index = parseInt(changes[0].id);
         if (
@@ -80,7 +86,8 @@ const Implementation = () => {
           if (
             nodes[node_index_last]?.type !== "AddButtonNodeSVG" &&
             changes[changes.length - 1]?.type === "dimensions" &&
-            changes[changes.length - 1]?.dimensions?.height
+            changes[changes.length - 1]?.dimensions?.height &&
+            node_index_last < nodes.length
           ) {
             const nodeRef = calculateRef(
               nodes,
@@ -88,21 +95,8 @@ const Implementation = () => {
               node_index_last,
               changes.length - 1
             );
-            console.log(
-              "types",
-              Object.values(nodeRef).includes(undefined),
-              Object.values(nodeRef).includes(NaN)
-            );
-
-            // if (
-            //   !(
-            //     Object.values(nodeRef).includes(undefined) ||
-            //     Object.values(nodeRef).includes(NaN)
-            //   )
-            // ) {
             const add = addIconsInsertion(nodeRef, nodes.length, filter);
             setNodes((pre) => [...pre, ...add]);
-            // }
           }
         }
       }}
