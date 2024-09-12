@@ -14,6 +14,7 @@ import CustomDatabase from "./components/Nodes/CustomDatabase";
 import CustomcurvedPipe from "./components/Nodes/CustomcurvedPipe";
 import CustomDataExp from "./components/Nodes/CustomDataExp";
 import { addIconsInsertion } from "./components/addIconsinsertion";
+import { onNodesChange } from "./components/onNodesChange";
 import { calculateRef } from "./components/CustomHookToAddSVG";
 // import { shiftNodes } from "./components/shiftNodes";
 
@@ -27,10 +28,11 @@ const Implementation = () => {
     },
   ];
   const initialEdges = [];
+  const [addedNodeId, setAddedNodeId] = useState();
   const [nodes, setNodes] = useNodesState(initialNodes);
   const [currentRef, setCurrentRef] = useState(null);
   const [filter, setFilter] = useState();
-  const [bottomReachedDetails, setBottomReachedDetails] = useState();
+  const [currentNodeRef, setCurrentNodeRef] = useState(null);
 
   const nodeTypes = useMemo(
     () => ({
@@ -42,6 +44,8 @@ const Implementation = () => {
           {...props}
           setNodes={setNodes}
           setFilter={setFilter}
+          setAddedNodeId={setAddedNodeId}
+          setCurrentNodeRef={setCurrentNodeRef}
         />
       ),
       CustomGaugeNode,
@@ -61,6 +65,12 @@ const Implementation = () => {
     }
   }, [currentRef]);
 
+  // useEffect(() => {
+  //   if (bottomReachedDetails.bottom && nodes.length > 4) {
+  //     shiftNodes(bottomReachedDetails, currentRef, setNodes);
+  //   }
+  // }, [bottomReachedDetails]);
+
   return (
     <ReactFlow
       nodes={nodes}
@@ -70,37 +80,10 @@ const Implementation = () => {
       //   console.log("fitview", e);
       // }}
       onNodesChange={(changes) => {
-        const node_index = parseInt(changes[0].id);
-        if (
-          nodes.length >= 4 && //change to 5 if added node on left as well
-          changes.length === 1 &&
-          node_index !== 0 &&
-          nodes[node_index]?.type !== "AddButtonNodeSVG" &&
-          changes?.[0]?.type === "dimensions" &&
-          changes?.[0]?.dimensions?.height
-        ) {
-          const nodeRef = calculateRef(nodes, changes, node_index, 0);
-          const add = addIconsInsertion(nodeRef, nodes.length, filter);
-          setNodes((pre) => [...pre, ...add]);
-        } else if (nodes.length === changes.length && nodes.length >= 4) {
-          const node_index_last = parseInt(changes[nodes.length - 1].id);
-          if (
-            nodes[node_index_last]?.type !== "AddButtonNodeSVG" &&
-            changes[changes.length - 1]?.type === "dimensions" &&
-            changes[changes.length - 1]?.dimensions?.height &&
-            node_index_last < nodes.length
-          ) {
-            const nodeRef = calculateRef(
-              nodes,
-              changes,
-              node_index_last,
-              changes.length - 1
-            );
-            const add = addIconsInsertion(nodeRef, nodes.length, filter);
-            setNodes((pre) => [...pre, ...add]);
-          }
-        }
-        // shiftNodes(nodes);
+        // console.log("changesnodes", nodes);
+        const ref = calculateRef(currentNodeRef);
+        onNodesChange(nodes, changes, filter, setNodes, addedNodeId, ref);
+        setAddedNodeId();
       }}
     >
       <Controls />

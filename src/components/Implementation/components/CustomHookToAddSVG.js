@@ -1,4 +1,9 @@
-export const AddCustomSVGFunction = (itemsToAdd, data, setNodes) => {
+export const AddCustomSVGFunction = (
+  itemsToAdd,
+  data,
+  setNodes,
+  setCurrentNodeRef
+) => {
   if (itemsToAdd.includes("gauge")) {
     setNodes((pre) => {
       const temp = [...pre];
@@ -11,6 +16,7 @@ export const AddCustomSVGFunction = (itemsToAdd, data, setNodes) => {
         },
         position: nodePosition(data.location, data.currentRef, 88, 84),
       };
+      setCurrentNodeRef(temp[data.id]);
       return temp;
     });
   }
@@ -23,6 +29,7 @@ export const AddCustomSVGFunction = (itemsToAdd, data, setNodes) => {
         data: { label: "pipe", dimensions: { height: 58, width: 267 } },
         position: nodePosition(data.location, data.currentRef, 58, 267),
       };
+      setCurrentNodeRef(temp[data.id]);
       return temp;
     });
   }
@@ -38,6 +45,7 @@ export const AddCustomSVGFunction = (itemsToAdd, data, setNodes) => {
         },
         position: nodePosition(data.location, data.currentRef, 107, 128),
       };
+      setCurrentNodeRef(temp[data.id]);
       return temp;
     });
   }
@@ -53,6 +61,7 @@ export const AddCustomSVGFunction = (itemsToAdd, data, setNodes) => {
         },
         position: nodePosition(data.location, data.currentRef, 175, 206),
       };
+      setCurrentNodeRef(temp[data.id]);
       return temp;
     });
   }
@@ -68,6 +77,7 @@ export const AddCustomSVGFunction = (itemsToAdd, data, setNodes) => {
         },
         position: nodePosition(data.location, data.currentRef, 157, 268),
       };
+      setCurrentNodeRef(temp[data.id]);
       return temp;
     });
   }
@@ -102,19 +112,33 @@ export const nodePosition = (location, currentRef, height, width) => {
   return { x: 0, y: 0 };
 };
 
-export const calculateRef = (nodes, changes, node_index, change_index) => {
+export const calculateRef = (ref) => {
   const calculatedRef = {
-    top: nodes[node_index]?.position?.y,
-    bottom:
-      nodes[node_index]?.position?.y +
-      changes[change_index]?.dimensions?.height,
-    left: nodes[node_index]?.position?.x,
-    right:
-      nodes[node_index]?.position?.x + changes[change_index]?.dimensions?.width,
-    x: nodes[node_index]?.position?.x,
-    y: nodes[node_index]?.position?.y,
-    height: changes[change_index]?.dimensions?.height,
-    width: changes[change_index]?.dimensions?.width,
+    top: ref?.position?.y,
+    bottom: ref?.position?.y + ref?.data?.dimensions?.height,
+    left: ref?.position?.x,
+    right: ref?.position?.x + ref?.data?.dimensions?.width,
+    x: ref?.position?.x,
+    y: ref?.position?.y,
+    height: ref?.data?.dimensions?.height,
+    width: ref?.data?.dimensions?.width,
   };
   return calculatedRef;
 };
+
+// export const calculateRef = (nodes, changes, node_index, change_index) => {
+//   const calculatedRef = {
+//     top: nodes[node_index]?.position?.y,
+//     bottom:
+//       nodes[node_index]?.position?.y +
+//       changes[change_index]?.dimensions?.height,
+//     left: nodes[node_index]?.position?.x,
+//     right:
+//       nodes[node_index]?.position?.x + changes[change_index]?.dimensions?.width,
+//     x: nodes[node_index]?.position?.x,
+//     y: nodes[node_index]?.position?.y,
+//     height: changes[change_index]?.dimensions?.height,
+//     width: changes[change_index]?.dimensions?.width,
+//   };
+//   return calculatedRef;
+// };

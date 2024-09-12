@@ -6,6 +6,7 @@ export const addIconsInsertion = (currentRef, index, filter) => {
         label: "added_on_top",
         currentRef,
         location: "top",
+        dimensions: { height: 48, width: 48 },
       },
       position: {
         x: (currentRef.left + currentRef.right - 48) / 2,
@@ -18,6 +19,7 @@ export const addIconsInsertion = (currentRef, index, filter) => {
         label: "added_on_right",
         currentRef,
         location: "right",
+        dimensions: { height: 48, width: 48 },
       },
       position: {
         x: currentRef.x + currentRef.width,
@@ -30,6 +32,7 @@ export const addIconsInsertion = (currentRef, index, filter) => {
         label: "added_on_bottom",
         currentRef,
         location: "bottom",
+        dimensions: { height: 48, width: 48 },
       },
       position: {
         x: (currentRef.left + currentRef.right - 48) / 2,
@@ -49,13 +52,15 @@ export const addIconsInsertion = (currentRef, index, filter) => {
     //   },
     // },
   ];
-  return arr
+  const filteredArray = arr
     .filter((item) => item.data.location !== filter)
     .map((newItem, i) => ({
       ...newItem,
       id: `${index + i}`,
       data: { ...newItem.data, id: `${index + i}` },
     }));
+
+  return filteredArray;
 };
 
 export const filterFunction = (location) => {
@@ -70,3 +75,28 @@ export const filterFunction = (location) => {
       return "left";
   }
 };
+
+// export const calculateBottomDetails = (
+//   filteredArray,
+//   setBottomReachedDetails
+// ) => {
+//   setBottomReachedDetails((pre) => {
+//     const temp = { ...pre };
+//     filteredArray.forEach((element) => {
+//       console.log("element", element);
+//       const nodeBottom = element.data.currentRef.height + element.position.y;
+//       const nodeTop = element.position.y;
+//       if (!temp.bottom) {
+//         temp.bottom = nodeBottom;
+//       } else if (nodeBottom > temp.bottom) {
+//         temp.bottom = nodeBottom;
+//       }
+//       if (!temp.top) {
+//         temp.top = nodeTop;
+//       } else if (nodeTop < temp.top) {
+//         temp.top = nodeTop;
+//       }
+//     });
+//     return temp;
+//   });
+// };

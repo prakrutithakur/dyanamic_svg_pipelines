@@ -4,7 +4,14 @@ import { AddCustomSVGFunction } from "../CustomHookToAddSVG";
 import Form from "../Form";
 import { filterFunction } from "../addIconsinsertion";
 
-function AddButtonNodeSVG({ data, isConnectable, setNodes, setFilter }) {
+function AddButtonNodeSVG({
+  data,
+  isConnectable,
+  setNodes,
+  setFilter,
+  setAddedNodeId,
+  setCurrentNodeRef,
+}) {
   const [renderButton, setRenderButton] = useState(true);
   const [addTolist, setAddToList] = useState([]);
 
@@ -15,7 +22,8 @@ function AddButtonNodeSVG({ data, isConnectable, setNodes, setFilter }) {
   const onClick = () => {
     setRenderButton(true);
     if (addTolist) {
-      AddCustomSVGFunction(addTolist, data, setNodes);
+      setAddedNodeId(data.id);
+      AddCustomSVGFunction(addTolist, data, setNodes, setCurrentNodeRef);
     }
   };
 
