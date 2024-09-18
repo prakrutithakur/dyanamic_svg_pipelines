@@ -11,6 +11,7 @@ function AddButtonNodeSVG({
   setFilter,
   setAddedNodeId,
   setCurrentNodeRef,
+  shifted_array,
 }) {
   const [renderButton, setRenderButton] = useState(true);
   const [addTolist, setAddToList] = useState([]);
@@ -23,7 +24,13 @@ function AddButtonNodeSVG({
     setRenderButton(true);
     if (addTolist) {
       setAddedNodeId(data.id);
-      AddCustomSVGFunction(addTolist, data, setNodes, setCurrentNodeRef);
+      AddCustomSVGFunction(
+        addTolist,
+        data,
+        setNodes,
+        setCurrentNodeRef,
+        shifted_array
+      );
     }
   };
 
@@ -39,6 +46,7 @@ function AddButtonNodeSVG({
               setFilter(filterLocation);
               setRenderButton(false);
             }}
+            // onMouseEnter={() => console.log(data)}
           />
         ) : (
           <Form onChange={onChange} onClick={onClick} />

@@ -75,28 +75,3 @@ export const filterFunction = (location) => {
       return "left";
   }
 };
-
-// export const calculateBottomDetails = (
-//   filteredArray,
-//   setBottomReachedDetails
-// ) => {
-//   setBottomReachedDetails((pre) => {
-//     const temp = { ...pre };
-//     filteredArray.forEach((element) => {
-//       console.log("element", element);
-//       const nodeBottom = element.data.currentRef.height + element.position.y;
-//       const nodeTop = element.position.y;
-//       if (!temp.bottom) {
-//         temp.bottom = nodeBottom;
-//       } else if (nodeBottom > temp.bottom) {
-//         temp.bottom = nodeBottom;
-//       }
-//       if (!temp.top) {
-//         temp.top = nodeTop;
-//       } else if (nodeTop < temp.top) {
-//         temp.top = nodeTop;
-//       }
-//     });
-//     return temp;
-//   });
-// };

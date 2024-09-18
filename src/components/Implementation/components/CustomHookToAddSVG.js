@@ -1,8 +1,10 @@
+import ShiftNodes from "./ShiftNodeLogic";
 export const AddCustomSVGFunction = (
   itemsToAdd,
   data,
   setNodes,
   setCurrentNodeRef
+  // shifted_array
 ) => {
   if (itemsToAdd.includes("gauge")) {
     setNodes((pre) => {
@@ -13,10 +15,14 @@ export const AddCustomSVGFunction = (
         data: {
           label: "CustomGaugeNode",
           dimensions: { height: 88, width: 84 },
+          location: data.location,
         },
         position: nodePosition(data.location, data.currentRef, 88, 84),
       };
       setCurrentNodeRef(temp[data.id]);
+      // const ref = calculateRef(temp[data.id]);
+      // const shifted_array = ShiftNodes(ref, temp);
+      // console.log("shifted_array", shifted_array);
       return temp;
     });
   }
@@ -26,10 +32,18 @@ export const AddCustomSVGFunction = (
       temp[data.id] = {
         id: data.id,
         type: "CustomPipe",
-        data: { label: "pipe", dimensions: { height: 58, width: 267 } },
+        data: {
+          label: "pipe",
+          dimensions: { height: 58, width: 267 },
+          location: data.location,
+        },
         position: nodePosition(data.location, data.currentRef, 58, 267),
       };
+      console.log("settingRef", temp[data.id]);
       setCurrentNodeRef(temp[data.id]);
+      // const ref = calculateRef(temp[data.id]);
+      // const shifted_array = ShiftNodes(ref, temp);
+      // console.log("shifted_array", shifted_array);
       return temp;
     });
   }
@@ -42,10 +56,14 @@ export const AddCustomSVGFunction = (
         data: {
           label: "CustomDatabase",
           dimensions: { height: 107, width: 128 },
+          location: data.location,
         },
         position: nodePosition(data.location, data.currentRef, 107, 128),
       };
       setCurrentNodeRef(temp[data.id]);
+      // const ref = calculateRef(temp[data.id]);
+      // const shifted_array = ShiftNodes(ref, temp);
+      // console.log("shifted_array", shifted_array);
       return temp;
     });
   }
@@ -58,10 +76,14 @@ export const AddCustomSVGFunction = (
         data: {
           label: "CustomcurvedPipe",
           dimensions: { width: 206, height: 175 },
+          location: data.location,
         },
         position: nodePosition(data.location, data.currentRef, 175, 206),
       };
       setCurrentNodeRef(temp[data.id]);
+      // const ref = calculateRef(temp[data.id]);
+      // const shifted_array = ShiftNodes(ref, temp);
+      // console.log("shifted_array", shifted_array);
       return temp;
     });
   }
@@ -74,10 +96,14 @@ export const AddCustomSVGFunction = (
         data: {
           label: "CustomDataExp",
           dimensions: { width: 268, height: 157 },
+          location: data.location,
         },
         position: nodePosition(data.location, data.currentRef, 157, 268),
       };
       setCurrentNodeRef(temp[data.id]);
+      // const ref = calculateRef(temp[data.id]);
+      // const shifted_array = ShiftNodes(ref, temp);
+      // console.log("shifted_array", shifted_array);
       return temp;
     });
   }
@@ -122,23 +148,35 @@ export const calculateRef = (ref) => {
     y: ref?.position?.y,
     height: ref?.data?.dimensions?.height,
     width: ref?.data?.dimensions?.width,
+    top_reached: ref?.position?.y - 48,
+    // top_reached: ref?.position?.y,
+    bottom_reached: ref?.position?.y + ref?.data?.dimensions?.height + 48,
+    // bottom_reached: ref?.position?.y + ref?.data?.dimensions?.height,
+    right_reached: ref?.position?.x + ref?.data?.dimensions?.width + 48,
+    left_reached: ref?.position?.x - 48,
+    centerX: ref?.position?.x + ref?.data?.dimensions?.width / 2,
+    centerY: ref?.position?.y + ref?.data?.dimensions?.height / 2,
   };
   return calculatedRef;
 };
 
-// export const calculateRef = (nodes, changes, node_index, change_index) => {
-//   const calculatedRef = {
-//     top: nodes[node_index]?.position?.y,
-//     bottom:
-//       nodes[node_index]?.position?.y +
-//       changes[change_index]?.dimensions?.height,
-//     left: nodes[node_index]?.position?.x,
-//     right:
-//       nodes[node_index]?.position?.x + changes[change_index]?.dimensions?.width,
-//     x: nodes[node_index]?.position?.x,
-//     y: nodes[node_index]?.position?.y,
-//     height: changes[change_index]?.dimensions?.height,
-//     width: changes[change_index]?.dimensions?.width,
-//   };
-//   return calculatedRef;
-// };
+export const DomRectToObj = (domRect) => {
+  return {
+    top: domRect.top,
+    bottom: domRect.bottom,
+    left: domRect.left,
+    right: domRect.right,
+    x: domRect.x,
+    y: domRect.y,
+    height: domRect.height,
+    width: domRect.width,
+    top_reached: domRect.top - 48,
+    // top_reached: ref?.position?.y,
+    bottom_reached: domRect.top + domRect.height + 48,
+    // bottom_reached: ref?.position?.y + ref?.data?.dimensions?.height,
+    right_reached: domRect.left + domRect.width + 48,
+    left_reached: domRect.left - 48,
+    centerX: domRect.left + domRect.width / 2,
+    centerY: domRect.top + domRect.height / 2,
+  };
+};

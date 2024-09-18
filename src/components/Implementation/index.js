@@ -15,8 +15,8 @@ import CustomcurvedPipe from "./components/Nodes/CustomcurvedPipe";
 import CustomDataExp from "./components/Nodes/CustomDataExp";
 import { addIconsInsertion } from "./components/addIconsinsertion";
 import { onNodesChange } from "./components/onNodesChange";
-import { calculateRef } from "./components/CustomHookToAddSVG";
-// import { shiftNodes } from "./components/shiftNodes";
+import { calculateRef, DomRectToObj } from "./components/CustomHookToAddSVG";
+import ShiftNodes from "./components/ShiftNodeLogicTwo";
 
 const Implementation = () => {
   const initialNodes = [
@@ -33,6 +33,7 @@ const Implementation = () => {
   const [currentRef, setCurrentRef] = useState(null);
   const [filter, setFilter] = useState();
   const [currentNodeRef, setCurrentNodeRef] = useState(null);
+  // const [shiftedNodes, setShiftedNodes] = useState([]);
 
   const nodeTypes = useMemo(
     () => ({
@@ -46,6 +47,7 @@ const Implementation = () => {
           setFilter={setFilter}
           setAddedNodeId={setAddedNodeId}
           setCurrentNodeRef={setCurrentNodeRef}
+          // shifted_array={shiftedNodes}
         />
       ),
       CustomGaugeNode,
@@ -60,7 +62,9 @@ const Implementation = () => {
   useEffect(() => {
     if (currentRef && currentRef.width && nodes.length === 1) {
       // to add three plus icon nodes initially on the combinedSVG node
-      const add = addIconsInsertion(currentRef, nodes.length, filter);
+      const ref = DomRectToObj(currentRef);
+      console.log("reffff", ref, currentRef);
+      const add = addIconsInsertion(ref, nodes.length, filter);
       setNodes((pre) => [...pre, ...add]);
     }
   }, [currentRef]);
@@ -81,9 +85,16 @@ const Implementation = () => {
       // }}
       onNodesChange={(changes) => {
         // console.log("changesnodes", nodes);
-        const ref = calculateRef(currentNodeRef);
-        onNodesChange(nodes, changes, filter, setNodes, addedNodeId, ref);
-        setAddedNodeId();
+
+        if (nodes.length > 1 && currentNodeRef) {
+          const ref = calculateRef(currentNodeRef);
+          console.log("ref", ref);
+          onNodesChange(nodes, changes, filter, setNodes, addedNodeId, ref);
+          setAddedNodeId();
+          const shifted_array = ShiftNodes(ref, nodes);
+          // console.log("shifted_array", shifted_array);
+          // setShiftedNodes(shifted_array);
+        }
       }}
     >
       <Controls />
