@@ -1,13 +1,12 @@
-import ShiftNodes from "./ShiftNodeLogic";
 export const AddCustomSVGFunction = (
   itemsToAdd,
   data,
   setNodes,
   setCurrentNodeRef
-  // shifted_array
 ) => {
   if (itemsToAdd.includes("gauge")) {
     setNodes((pre) => {
+      console.log("pre", pre);
       const temp = [...pre];
       temp[data.id] = {
         id: data.id,
@@ -20,9 +19,6 @@ export const AddCustomSVGFunction = (
         position: nodePosition(data.location, data.currentRef, 88, 84),
       };
       setCurrentNodeRef(temp[data.id]);
-      // const ref = calculateRef(temp[data.id]);
-      // const shifted_array = ShiftNodes(ref, temp);
-      // console.log("shifted_array", shifted_array);
       return temp;
     });
   }
@@ -41,9 +37,6 @@ export const AddCustomSVGFunction = (
       };
       console.log("settingRef", temp[data.id]);
       setCurrentNodeRef(temp[data.id]);
-      // const ref = calculateRef(temp[data.id]);
-      // const shifted_array = ShiftNodes(ref, temp);
-      // console.log("shifted_array", shifted_array);
       return temp;
     });
   }
@@ -61,9 +54,6 @@ export const AddCustomSVGFunction = (
         position: nodePosition(data.location, data.currentRef, 107, 128),
       };
       setCurrentNodeRef(temp[data.id]);
-      // const ref = calculateRef(temp[data.id]);
-      // const shifted_array = ShiftNodes(ref, temp);
-      // console.log("shifted_array", shifted_array);
       return temp;
     });
   }
@@ -81,9 +71,6 @@ export const AddCustomSVGFunction = (
         position: nodePosition(data.location, data.currentRef, 175, 206),
       };
       setCurrentNodeRef(temp[data.id]);
-      // const ref = calculateRef(temp[data.id]);
-      // const shifted_array = ShiftNodes(ref, temp);
-      // console.log("shifted_array", shifted_array);
       return temp;
     });
   }
@@ -101,9 +88,6 @@ export const AddCustomSVGFunction = (
         position: nodePosition(data.location, data.currentRef, 157, 268),
       };
       setCurrentNodeRef(temp[data.id]);
-      // const ref = calculateRef(temp[data.id]);
-      // const shifted_array = ShiftNodes(ref, temp);
-      // console.log("shifted_array", shifted_array);
       return temp;
     });
   }
@@ -171,9 +155,7 @@ export const DomRectToObj = (domRect) => {
     height: domRect.height,
     width: domRect.width,
     top_reached: domRect.top - 48,
-    // top_reached: ref?.position?.y,
     bottom_reached: domRect.top + domRect.height + 48,
-    // bottom_reached: ref?.position?.y + ref?.data?.dimensions?.height,
     right_reached: domRect.left + domRect.width + 48,
     left_reached: domRect.left - 48,
     centerX: domRect.left + domRect.width / 2,

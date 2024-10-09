@@ -14,7 +14,7 @@ function AddButtonNodeSVG({
   shifted_array,
 }) {
   const [renderButton, setRenderButton] = useState(true);
-  const [addTolist, setAddToList] = useState([]);
+  const [addTolist, setAddToList] = useState(["pipe"]);
 
   const onChange = useCallback((evt) => {
     setAddToList(evt.target.value.split(","));
@@ -44,7 +44,17 @@ function AddButtonNodeSVG({
             onClick={(e) => {
               const filterLocation = filterFunction(data.location);
               setFilter(filterLocation);
-              setRenderButton(false);
+              // setRenderButton(false);
+              if (true) {
+                setAddedNodeId(data.id);
+                AddCustomSVGFunction(
+                  addTolist,
+                  data,
+                  setNodes,
+                  setCurrentNodeRef,
+                  shifted_array
+                );
+              }
             }}
             // onMouseEnter={() => console.log(data)}
           />

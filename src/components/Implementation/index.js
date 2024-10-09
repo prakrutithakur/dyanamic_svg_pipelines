@@ -16,7 +16,6 @@ import CustomDataExp from "./components/Nodes/CustomDataExp";
 import { addIconsInsertion } from "./components/addIconsinsertion";
 import { onNodesChange } from "./components/onNodesChange";
 import { calculateRef, DomRectToObj } from "./components/CustomHookToAddSVG";
-import ShiftNodes from "./components/ShiftNodeLogicTwo";
 
 const Implementation = () => {
   const initialNodes = [
@@ -63,17 +62,10 @@ const Implementation = () => {
     if (currentRef && currentRef.width && nodes.length === 1) {
       // to add three plus icon nodes initially on the combinedSVG node
       const ref = DomRectToObj(currentRef);
-      console.log("reffff", ref, currentRef);
       const add = addIconsInsertion(ref, nodes.length, filter);
       setNodes((pre) => [...pre, ...add]);
     }
   }, [currentRef]);
-
-  // useEffect(() => {
-  //   if (bottomReachedDetails.bottom && nodes.length > 4) {
-  //     shiftNodes(bottomReachedDetails, currentRef, setNodes);
-  //   }
-  // }, [bottomReachedDetails]);
 
   return (
     <ReactFlow
@@ -84,16 +76,12 @@ const Implementation = () => {
       //   console.log("fitview", e);
       // }}
       onNodesChange={(changes) => {
-        // console.log("changesnodes", nodes);
-
+        console.log("changesnodes", nodes);
         if (nodes.length > 1 && currentNodeRef) {
           const ref = calculateRef(currentNodeRef);
-          console.log("ref", ref);
+          // console.log("ref", ref);
           onNodesChange(nodes, changes, filter, setNodes, addedNodeId, ref);
           setAddedNodeId();
-          const shifted_array = ShiftNodes(ref, nodes);
-          // console.log("shifted_array", shifted_array);
-          // setShiftedNodes(shifted_array);
         }
       }}
     >

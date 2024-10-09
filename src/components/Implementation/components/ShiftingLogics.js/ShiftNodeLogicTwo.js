@@ -65,6 +65,7 @@ export const ShiftNodes = (nodeRef, nodes) => {
   console.log("filter", "above", nodes_above_addedNode);
   console.log("filter", "below", nodes_below_addedNode);
   console.log("filter", "at", nodes_at_addedNode);
+
   return [
     ...updated_above_array,
     ...updated_below_array,
